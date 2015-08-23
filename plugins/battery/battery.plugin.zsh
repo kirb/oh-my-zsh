@@ -12,8 +12,14 @@ if [[ "$OSTYPE" = darwin* ]] ; then
 
   function battery_pct() {
     local smart_battery_status="$(ioreg -rc "AppleSmartBattery")"
+
+    if [ "$smart_battery_status" -eq "" ]; then
+      return
+    fi
+
     typeset -F maxcapacity=$(echo $smart_battery_status | command grep '^.*"MaxCapacity"\ =\ ' | sed -e 's/^.*"MaxCapacity"\ =\ //')
     typeset -F currentcapacity=$(echo $smart_battery_status | command grep '^.*"CurrentCapacity"\ =\ ' | sed -e 's/^.*CurrentCapacity"\ =\ //')
+
     integer i=$(((currentcapacity/maxcapacity) * 100))
     echo $i
   }
@@ -91,7 +97,7 @@ elif [[ $(uname) == "Linux"  ]] ; then
   }
 
   function battery_pct_prompt() {
-    b=$(battery_pct_remaining) 
+    b=$(battery_pct_remaining)
     if [[ $(acpi 2&>/dev/null | command grep -c '^Battery.*Discharging') -gt 0 ]] ; then
       if [ $b -gt 50 ] ; then
         color='green'
