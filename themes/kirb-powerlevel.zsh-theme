@@ -11,13 +11,14 @@ prompt_battery() {
 	percentage=$(battery_pct)
 	symbol='%%'
 
-	battery_is_charging && symbol="$ROOT_ICON"
+	battery_is_charging && symbol="%{$fg[yellow]%}$ROOT_ICON"
+	battery_is_fully_charged && symbol="%{$fg[yellow]%}$OK_ICON"
 
-	if [ $percentage -eq ]; then
+	if [[ "$percentage" == "" ]]; then
 		return
-	elif [ $percentage -gt 50 ]; then
+	elif (( $percentage >= 50 )); then
 		color=green
-	elif [ $percentage -gt 20 ]; then
+	elif (( $percentage >= 20 )); then
 		color=yellow
 	else
 		color=red

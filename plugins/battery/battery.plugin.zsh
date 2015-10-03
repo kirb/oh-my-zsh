@@ -13,7 +13,7 @@ if [[ "$OSTYPE" = darwin* ]] ; then
   function battery_pct() {
     local smart_battery_status="$(ioreg -rc "AppleSmartBattery")"
 
-    if [ "$smart_battery_status" -eq "" ]; then
+    if [[ "$smart_battery_status" == "" ]]; then
       return
     fi
 
@@ -70,10 +70,19 @@ if [[ "$OSTYPE" = darwin* ]] ; then
     [[ $(ioreg -rc "AppleSmartBattery"| command grep '^.*"IsCharging"\ =\ ' | sed -e 's/^.*"IsCharging"\ =\ //') == "Yes" ]]
   }
 
+  function battery_is_fully_charged() {
+    [[ $(ioreg -rc "AppleSmartBattery"| command grep '^.*"FullyCharged"\ =\ ' | sed -e 's/^.*"FullyCharged"\ =\ //') == "Yes" ]]
+  }
+
 elif [[ $(uname) == "Linux"  ]] ; then
 
   function battery_is_charging() {
     ! [[ $(acpi 2&>/dev/null | command grep -c '^Battery.*Discharging') -gt 0 ]]
+  }
+
+  function battery_is_fully_charged() {
+    # TODO: implement
+    battery_is_charging
   }
 
   function battery_pct() {
