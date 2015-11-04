@@ -25,7 +25,7 @@ then
 
   mv ~/.zshrc.pre-oh-my-zsh ~/.zshrc;
 
-  . ~/.zshrc;
+  echo "Your original zsh config was restored. Please restart your session."
 else
   echo "Switching back to bash"
   chsh -s /bin/bash
