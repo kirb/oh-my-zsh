@@ -61,7 +61,6 @@ xcswitch() {
 	echo "Switched to $(xcsel -print-path)"
 }
 
-
 # not found handler
 command_not_found_handler() {
 	echo "$1: command not found"
@@ -150,6 +149,8 @@ alias optim='open -b net.pornel.ImageOptim'
 alias io=optim
 alias alpha='open -b net.pornel.ImageAlpha'
 alias man=run-help
+alias pbcopy=clipcopy
+alias pbpaste=clippaste
 
 # this must be sourced last
 safe_source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
