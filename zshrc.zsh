@@ -92,8 +92,8 @@ export IPHONEOS_ROOT=~/sdks/ios/iPhoneOS.sdk
 export IPHONE_SIMULATOR_ROOT=~/sdks/sim/iPhoneSimulator.sdk
 
 # aliases
-alias ls='ls -Fbapht --color'
-alias lsd='ls -l'
+alias lsd='ls -Fbapht --color'
+alias ls='lsd -l'
 alias grep='grep --color -rin --exclude-dir={.bzr,.cvs,.git,.hg,.svn}'
 alias nic='$THEOS/bin/nic.pl'
 alias logify='$THEOS/bin/logify.pl'
