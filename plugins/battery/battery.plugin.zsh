@@ -74,10 +74,10 @@ if [[ "$OSTYPE" = darwin* ]] ; then
     [[ $(ioreg -rc "AppleSmartBattery"| command grep '^.*"FullyCharged"\ =\ ' | sed -e 's/^.*"FullyCharged"\ =\ //') == "Yes" ]]
   }
 
-elif [[ $(uname) == "Linux"  ]] ; then
+elif [[ "$OSTYPE" = linux*  ]] ; then
 
   function battery_is_charging() {
-    ! [[ $(acpi 2&>/dev/null | command grep -c '^Battery.*Discharging') -gt 0 ]]
+    ! [[ $(acpi 2>/dev/null | command grep -c '^Battery.*Discharging') -gt 0 ]]
   }
 
   function battery_is_fully_charged() {
@@ -87,7 +87,7 @@ elif [[ $(uname) == "Linux"  ]] ; then
 
   function battery_pct() {
     if (( $+commands[acpi] )) ; then
-      echo "$(acpi | cut -f2 -d ',' | tr -cd '[:digit:]')"
+      echo "$(acpi 2>/dev/null | cut -f2 -d ',' | tr -cd '[:digit:]')"
     fi
   }
 
@@ -100,14 +100,14 @@ elif [[ $(uname) == "Linux"  ]] ; then
   }
 
   function battery_time_remaining() {
-    if [[ $(acpi 2&>/dev/null | command grep -c '^Battery.*Discharging') -gt 0 ]] ; then
-      echo $(acpi | cut -f3 -d ',')
+    if [[ $(acpi 2>/dev/null | command grep -c '^Battery.*Discharging') -gt 0 ]] ; then
+      echo $(acpi 2>/dev/null | cut -f3 -d ',')
     fi
   }
 
   function battery_pct_prompt() {
-    b=$(battery_pct_remaining)
-    if [[ $(acpi 2&>/dev/null | command grep -c '^Battery.*Discharging') -gt 0 ]] ; then
+    b=$(battery_pct_remaining) 
+    if [[ $(acpi 2>/dev/null | command grep -c '^Battery.*Discharging') -gt 0 ]] ; then
       if [ $b -gt 50 ] ; then
         color='green'
       elif [ $b -gt 20 ] ; then
