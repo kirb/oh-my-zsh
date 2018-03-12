@@ -1,3 +1,6 @@
 [submodule "themes/powerlevel9k"]
 	path = themes/powerlevel9k
 	url = https://github.com/bhilburn/powerlevel9k.git
+[submodule "plugins/wakatime"]
+	path = plugins/wakatime
+	url = https://github.com/wbingli/zsh-wakatime.git
