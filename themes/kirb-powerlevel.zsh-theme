@@ -6,4 +6,4 @@ POWERLEVEL9K_PROMPT_ON_NEWLINE=true
 POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX="┌"
 POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="└ "
 
-source $ZSH/themes/powerlevel9k/powerlevel9k.zsh-theme
+source $ZSH/themes/powerlevel10k/powerlevel10k.zsh-theme
