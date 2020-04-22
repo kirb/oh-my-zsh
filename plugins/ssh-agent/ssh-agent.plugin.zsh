@@ -11,8 +11,8 @@ function _start_agent() {
 }
 
 function _add_identities() {
-	local id line sig lines
-	local -a identities loaded_sigs loaded_ids not_loaded
+	local id line lines
+	local -a identities loaded_ids not_loaded
 	zstyle -a :omz:plugins:ssh-agent identities identities
 
 	# check for .ssh folder presence
@@ -26,14 +26,13 @@ function _add_identities() {
 		# key list found on `ssh-add` man page's DESCRIPTION section
 		for id in id_rsa id_dsa id_ecdsa id_ed25519 identity; do
 			# check if file exists
-			[[ -f "$HOME/.ssh/$id" ]] && identities+=$id
+			[[ -f $HOME/.ssh/$id ]] && identities+=$id
 		done
 	fi
 
 	# get list of loaded identities' signatures and filenames
 	if lines=$(/usr/bin/ssh-add -l); then
 		for line in ${(f)lines}; do
-			loaded_sigs+=${${(z)line}[2]}
 			loaded_ids+=${${(z)line}[3]}
 		done
 	fi
@@ -42,8 +41,7 @@ function _add_identities() {
 	for id in $identities; do
 		# check for filename match, otherwise try for signature match
 		if [[ ${loaded_ids[(I)$HOME/.ssh/$id]} -le 0 ]]; then
-			sig="$(/usr/bin/ssh-keygen -lf "$HOME/.ssh/$id" | awk '{print $2}')"
-			[[ ${loaded_sigs[(I)$sig]} -le 0 ]] && not_loaded+="$HOME/.ssh/$id"
+			not_loaded+=$HOME/.ssh/$id
 		fi
 	done
 
@@ -51,7 +49,7 @@ function _add_identities() {
 }
 
 # Get the filename to store/lookup the environment from
-_ssh_env_cache="$HOME/.ssh/environment-$SHORT_HOST"
+_ssh_env_cache="$TMPDIR/ssh-agent-environment"
 
 # test if agent-forwarding is enabled
 zstyle -b :omz:plugins:ssh-agent agent-forwarding _agent_forwarding
@@ -62,14 +60,9 @@ if [[ $_agent_forwarding == "yes" && -n "$SSH_AUTH_SOCK" ]]; then
 elif [[ -f "$_ssh_env_cache" ]]; then
 	# Source SSH settings, if applicable
 	. $_ssh_env_cache > /dev/null
-	if [[ $USER == "root" ]]; then
-		FILTER="ax"
-	else
-		FILTER="x"
-	fi
-	ps $FILTER | grep ssh-agent | grep -q $SSH_AGENT_PID || {
+	if ! pgrep -U $UID ssh-agent | command grep -q $SSH_AGENT_PID; then
 		_start_agent
-	}
+	fi
 else
 	_start_agent
 fi
