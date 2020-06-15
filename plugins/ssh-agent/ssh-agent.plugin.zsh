@@ -49,7 +49,7 @@ function _add_identities() {
 }
 
 # Get the filename to store/lookup the environment from
-_ssh_env_cache="$TMPDIR/ssh-agent-environment"
+_ssh_env_cache="$HOME/.ssh/environment-$SHORT_HOST"
 
 # test if agent-forwarding is enabled
 zstyle -b :omz:plugins:ssh-agent agent-forwarding _agent_forwarding
